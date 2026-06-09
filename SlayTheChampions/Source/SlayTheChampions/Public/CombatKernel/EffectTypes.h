@@ -88,4 +88,18 @@ struct FCardEffect
 	// 예: 데미지는 SingleEnemy, 버프는 Self를 같은 카드에 공존시킬 때 사용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
 	EEffectTargetType TargetType = EEffectTargetType::UseCardDefault;
+
+	/**
+	 * 이 효과에 재생할 나이아가라 VFX 태그.
+	 * DA_CardVFX(UCardVFXDataAsset)의 EffectMap 키와 일치해야 한다.
+	 *
+	 * 사용 예:
+	 *   Debuff_Burn  → VFXTag = "Fire_Burn"   → DA_CardVFX 에서 NS_FireBurn 재생
+	 *   Debuff_Weak  → VFXTag = "Dark_Weak"   → DA_CardVFX 에서 NS_DarkWeak 재생
+	 *   Shield       → VFXTag = "Shield_Block" → DA_CardVFX 에서 NS_ShieldBlock 재생
+	 *
+	 * None 이면 이 효과에서는 VFX 재생하지 않음.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
+	FName VFXTag = NAME_None;
 };

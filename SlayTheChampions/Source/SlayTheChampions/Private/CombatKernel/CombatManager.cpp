@@ -15,6 +15,8 @@
 #include "Components/ArrowComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Card/CardUserComponent.h"  // 스폰된 플레이어에 PawnIndex 주입 및 드로우 호출용
+#include "Card/CardVFXDataAsset.h"   // 카드 VFX 태그 기반 나이아가라 매핑
+#include "NiagaraFunctionLibrary.h"  // UNiagaraFunctionLibrary::SpawnSystemAtLocation
 
 // 생성자: 스폰 위치 박스 컴포넌트들을 미리 배치
 ACombatManager::ACombatManager()
@@ -297,6 +299,34 @@ void ACombatManager::ExecuteCard(const FCardDataRow& Card, int32 CasterIndex, AU
 				UEffectManager::ApplyBuff(Target, Effect.EffectType, Effect.Value);
 			else
 				UEffectManager::ApplyEffect(Target, Effect.EffectType, Effect.Value);
+		}
+	}
+
+	// ── 3. VFX 재생 ─────────────────────────────────────────────────────────────
+	// DA_CardVFX 가 할당되어 있을 때만 실행.
+	// Effects 배열의 각 항목에 VFXTag 가 있으면 해당 효과의 타겟 위치에 이펙트 재생.
+	// 예: Debuff_Burn + VFXTag="Fire_Burn" → 적 위치에 화염 나이아가라 재생
+	if (CardVFXDataAsset)
+	{
+		for (const FCardEffect& Effect : Card.Effects)
+		{
+			// VFXTag 가 없는 효과는 VFX 없이 넘어감
+			if (Effect.VFXTag.IsNone()) continue;
+
+			UNiagaraSystem* FX = CardVFXDataAsset->GetEffect(Effect.VFXTag);
+			if (!FX) continue;
+
+			// 이 효과의 VFX 를 재생할 타겟 결정
+			// (Effects 의 TargetType 을 그대로 사용해서 효과 대상과 VFX 대상이 일치)
+			TArray<AUnit*> VFXTargets = ResolveEffectTargets(Effect.TargetType);
+			for (AUnit* Target : VFXTargets)
+			{
+				if (!Target || !Target->IsAlive()) continue;
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+					GetWorld(), FX, Target->GetActorLocation(),
+					FRotator::ZeroRotator, FVector::OneVector,
+					true  /* bAutoDestroy */);
+			}
 		}
 	}
 

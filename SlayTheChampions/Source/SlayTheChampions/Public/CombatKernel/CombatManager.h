@@ -12,6 +12,7 @@ class UBoxComponent;
 class UArrowComponent;
 class ACameraActor;
 class UBattleMainWidget;
+class UCardVFXDataAsset;
 
 /**
  * ETurnPhase
@@ -118,6 +119,15 @@ public:
 	// 전투 카메라 Blueprint 클래스 (nullptr이면 카메라 변경 없음)
 	UPROPERTY(EditAnywhere, Category = "Combat|Setup")
 	TSubclassOf<ACameraActor> BattleCameraClass;
+
+	/**
+	 * 카드 VFX 매핑 DataAsset.
+	 * 에디터 Details 패널에서 DA_CardVFX 를 할당하면
+	 * ExecuteCard() 실행 시 카드의 EffectTag 에 맞는 나이아가라 이펙트를 재생한다.
+	 * 없으면 VFX 재생 없이 정상 동작.
+	 */
+	UPROPERTY(EditAnywhere, Category = "Combat|Effects")
+	TObjectPtr<UCardVFXDataAsset> CardVFXDataAsset;
 
 	// ── 스폰 수 ──────────────────────────────────────────────────
 	// 스폰할 플레이어 수 (1~2)

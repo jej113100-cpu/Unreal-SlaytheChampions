@@ -9,6 +9,7 @@ class UCardStyleDataAsset;
 class UHandWidget;
 class UImage;
 class UTextBlock;
+class URichTextBlock;
 
 /**
  * UCardWidget
@@ -136,8 +137,11 @@ protected:
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
     TObjectPtr<UTextBlock> CardNameText;
 
+    // 카드 설명 — RichTextBlock 으로 태그 기반 색상 지원
+    // 태그 예: <debuff>취약</> <exhaust>소멸</> <buff>재생</>
+    // WBP_Card 에서 반드시 RichTextBlock 으로 배치하고 이름을 DescriptionText 로 맞출 것
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-    TObjectPtr<UTextBlock> DescriptionText;
+    TObjectPtr<URichTextBlock> DescriptionText;
 
     UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
     TObjectPtr<UTextBlock> CostText;
