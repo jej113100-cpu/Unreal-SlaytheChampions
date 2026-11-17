@@ -11,7 +11,6 @@ class UImage;
 class AUnit;
 class UStatComponent;
 class UStatusEffectComponent;
-class UNiagaraSystemWidget;
 class UBuffPanelWidget;
 class UEffectTooltipWidget;
 
@@ -54,7 +53,7 @@ protected:
 
 	// 방어도 나이아가라 위젯 — Shield=0이면 숨김, WBP에서 'NiagaraShield' 이름으로 배치
 	UPROPERTY(meta = (BindWidgetOptional))
-	UNiagaraSystemWidget* NiagaraShield;
+	UWidget* NiagaraShield;
 
 	// 버프/디버프 패널 — WBP에서 'BuffPanel' 이름으로 배치
 	UPROPERTY(meta = (BindWidgetOptional))
